@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', include('users.urls')),  # Include the users app URLs
     path('api/repos/', include('repo.urls')),  # Include the repo app URLs
+    path('api/organizations/', include('organizations.urls')),  # Include the organizations app URLs
 ]
