@@ -11,8 +11,8 @@ OrganizationMemberListView
 )
 
 urlpatterns = [
-    path('/create/', OrganizationCreateView.as_view(), name='organization-create'),
-    path('/', OrganizationListView.as_view(), name='organization-list'),
+    path('create/', OrganizationCreateView.as_view(), name='organization-create'),
+    path('', OrganizationListView.as_view(), name='organization-list'),
     path('<int:pk>/', OrganizationDetailView.as_view(), name='organization-detail'),
     path('<int:pk>/update/', OrganizationUpdateView.as_view(), name='organization-update'),
     path('<int:pk>/delete/', OrganizationDeleteView.as_view(), name='organization-delete'),

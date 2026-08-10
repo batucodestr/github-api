@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 # Create your models here.
 
 role_choices = [
@@ -24,7 +23,7 @@ updated_at
 '''
 
 class Organization(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='organizations')
+    owner = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='organizations')
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True, null=True)
     avatar = models.ImageField(upload_to='organization_avatars/', blank=True, null=True)
@@ -48,7 +47,7 @@ joined_at
 
 class OrganizationMember(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='members')
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='organization_memberships')
+    user = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='organization_memberships')
     role = models.CharField(max_length=50, choices=role_choices, default='member')
     joined_at = models.DateTimeField(auto_now_add=True)
 

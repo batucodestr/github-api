@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from .models import Repo
 # Register your models here.
 
-admin.site.site_header = "GitHub API Admin"
+admin.site.register(Repo)
