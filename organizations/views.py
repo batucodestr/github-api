@@ -7,10 +7,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .permissions import IsOrganizationAdmin,IsOrganizationOwner, IsOrganizationMember
 
-# Create your views here.
+# Görünümler burada oluşturulur.
 
 # Organization Views
-@extend_schema(tags=['Organizations'], summary='Create a new organization')
+@extend_schema(tags=['Organizasyonlar'], summary='Yeni bir organizasyon oluşturur')
 class OrganizationCreateView(generics.CreateAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
@@ -28,32 +28,32 @@ class OrganizationCreateView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(
             {
-                "message": "Organization created successfully",
+                "message": "Organizasyon başarıyla oluşturuldu",
                 "organization": OrganizationSerializer(organization).data,
             },
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
 
-@extend_schema(tags=['Organizations'], summary='List all organizations')
+@extend_schema(tags=['Organizasyonlar'], summary='Tüm organizasyonları listeler')
 class OrganizationListView(generics.ListAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     permission_classes = [IsAuthenticated]
 
-@extend_schema(tags=['Organizations'], summary='Retrieve details for a specific organization')
+@extend_schema(tags=['Organizasyonlar'], summary='Belirli bir organizasyonun detaylarını getirir')
 class OrganizationDetailView(generics.RetrieveAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationDetailSerializer
     permission_classes = [IsAuthenticated]
 
-@extend_schema(tags=['Organizations'], summary='Update an organization as an admin')
+@extend_schema(tags=['Organizasyonlar'], summary='Yönetici olarak bir organizasyonu günceller')
 class OrganizationUpdateView(generics.UpdateAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     permission_classes = [IsAuthenticated, IsOrganizationAdmin]
 
-@extend_schema(tags=['Organizations'], summary='Delete an organization as the owner')
+@extend_schema(tags=['Organizasyonlar'], summary='Sahip olarak bir organizasyonu siler')
 class OrganizationDeleteView(generics.DestroyAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
@@ -61,7 +61,7 @@ class OrganizationDeleteView(generics.DestroyAPIView):
 
 
 # Organization Member Views
-@extend_schema(tags=['Organizations'], summary='Add a member to an organization')
+@extend_schema(tags=['Organizasyonlar'], summary='Organizasyona bir üye ekler')
 class OrganizationAddMemberView(generics.CreateAPIView):
     queryset = OrganizationMember.objects.all()
     serializer_class = OrganizationMemberSerializer
@@ -74,14 +74,14 @@ class OrganizationAddMemberView(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(
             {
-                "message": "Member added to organization successfully",
+                "message": "Üye organizasyona başarıyla eklendi",
                 "organization_member": OrganizationMemberSerializer(organization_member).data,
             },
             status=status.HTTP_201_CREATED,
             headers=headers,
         )
 
-@extend_schema(tags=['Organizations'], summary='Remove a member from an organization')
+@extend_schema(tags=['Organizasyonlar'], summary='Organizasyondan bir üyeyi kaldırır')
 class OrganizationRemoveMemberView(generics.DestroyAPIView):
     queryset = OrganizationMember.objects.all()
     serializer_class = OrganizationMemberSerializer
@@ -91,11 +91,11 @@ class OrganizationRemoveMemberView(generics.DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(
-            {"message": "Member removed from organization successfully"},
+            {"message": "Üye organizasyondan başarıyla kaldırıldı"},
             status=status.HTTP_200_OK,
         )
 
-@extend_schema(tags=['Organizations'], summary='List members of an organization')
+@extend_schema(tags=['Organizasyonlar'], summary='Bir organizasyonun üyelerini listeler')
 class OrganizationMemberListView(generics.ListAPIView):
     serializer_class = OrganizationMemberSerializer
     permission_classes = [IsAuthenticated, IsOrganizationMember]

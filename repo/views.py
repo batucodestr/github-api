@@ -9,9 +9,9 @@ from rest_framework import status
 from organizations.models import Organization
 from organizations.permissions import IsOrganizationMember
 
-# Create your views here.
+# Görünümler burada oluşturulur.
 
-@extend_schema(tags=['Repositories'], summary='Create a new repository owned by the authenticated user')
+@extend_schema(tags=['Depolar'], summary='Kimliği doğrulanmış kullanıcının sahibi olduğu yeni depo oluşturur')
 class RepoCreateView(generics.CreateAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoSerializer
@@ -21,7 +21,7 @@ class RepoCreateView(generics.CreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-@extend_schema(tags=['Repositories'], summary='Create a new repository within an organization')
+@extend_schema(tags=['Depolar'], summary='Bir organizasyon içinde yeni depo oluşturur')
 class RepoOrganizationCreateView(generics.CreateAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoSerializer
@@ -33,7 +33,7 @@ class RepoOrganizationCreateView(generics.CreateAPIView):
 
 
 # Repoları herkes görebilir ama sadece sahipleri düzenleyebilir. Bu yüzden list kısmında kontrole gerek yok.
-@extend_schema(tags=['Repositories'], summary='List all repositories')
+@extend_schema(tags=['Depolar'], summary='Tüm depoları listeler')
 class RepoListView(generics.ListAPIView):
     serializer_class = RepoSerializer
     permission_classes = [AllowAny]
@@ -42,7 +42,7 @@ class RepoListView(generics.ListAPIView):
         return Repo.objects.all()    
 
 
-@extend_schema(tags=['Repositories'], summary='Retrieve, update, or delete a repository')
+@extend_schema(tags=['Depolar'], summary='Bir depoyu getirir, günceller veya siler')
 class RepoDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer
@@ -51,7 +51,7 @@ class RepoDetailView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return Repo.objects.all()
 
-@extend_schema(tags=['Repositories'], summary='Update a repository owned by the authenticated user')
+@extend_schema(tags=['Depolar'], summary='Kimliği doğrulanmış kullanıcının sahibi olduğu depoyu günceller')
 class RepoUpdateView(generics.UpdateAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer
@@ -60,7 +60,7 @@ class RepoUpdateView(generics.UpdateAPIView):
     def get_queryset(self):
         return Repo.objects.filter(owner=self.request.user)
 
-@extend_schema(tags=['Repositories'], summary='Delete a repository owned by the authenticated user')
+@extend_schema(tags=['Depolar'], summary='Kimliği doğrulanmış kullanıcının sahibi olduğu depoyu siler')
 class RepoDeleteView(generics.DestroyAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer
@@ -70,27 +70,27 @@ class RepoDeleteView(generics.DestroyAPIView):
         return Repo.objects.filter(owner=self.request.user)
 
 
-# Admin İşlemleri
+# Yönetici işlemleri
 
-@extend_schema(tags=['Repositories'], summary='Admin list all repositories')
+@extend_schema(tags=['Depolar'], summary='Yönetici için tüm depoları listeler')
 class RepoAdminListView(generics.ListAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer
     permission_classes = [IsAdminUser]
 
-@extend_schema(tags=['Repositories'], summary='Admin retrieve, update, or delete a repository')
+@extend_schema(tags=['Depolar'], summary='Yönetici için bir depoyu getirir, günceller veya siler')
 class RepoAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer
     permission_classes = [IsAdminUser]
 
-@extend_schema(tags=['Repositories'], summary='Admin update any repository')
+@extend_schema(tags=['Depolar'], summary='Yönetici için herhangi bir depoyu günceller')
 class RepoAdminUpdateView(generics.UpdateAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer
     permission_classes = [IsAdminUser]
 
-@extend_schema(tags=['Repositories'], summary='Admin delete any repository')
+@extend_schema(tags=['Depolar'], summary='Yönetici için herhangi bir depoyu siler')
 class RepoAdminDeleteView(generics.DestroyAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer

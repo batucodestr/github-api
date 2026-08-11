@@ -15,19 +15,19 @@ from rest_framework.permissions import IsAdminUser
 
 User = get_user_model()
 
-@extend_schema(tags=['Users'], summary='Obtain JWT access and refresh tokens')
+@extend_schema(tags=['Kullanıcılar'], summary='JWT erişim ve yenileme tokenleri alır')
 class CustomTokenObtainPairView(TokenObtainPairView):
     pass
 
-@extend_schema(tags=['Users'], summary='Refresh JWT access token')
+@extend_schema(tags=['Kullanıcılar'], summary='JWT erişim tokenini yeniler')
 class CustomTokenRefreshView(TokenRefreshView):
     pass
 
-@extend_schema(tags=['Users'], summary='Verify a JWT token')
+@extend_schema(tags=['Kullanıcılar'], summary='JWT tokenini doğrular')
 class CustomTokenVerifyView(TokenVerifyView):
     pass
 
-@extend_schema(tags=['Users'], summary='Register a new user account')
+@extend_schema(tags=['Kullanıcılar'], summary='Yeni bir kullanıcı kaydı oluşturur')
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
@@ -46,7 +46,7 @@ class SignUpView(generics.CreateAPIView):
 
         return Response(data=response, status=status.HTTP_201_CREATED)
 
-@extend_schema(tags=['Users'], summary='Authenticate a user and return JWT tokens', request=LoginSerializer)
+@extend_schema(tags=['Kullanıcılar'], summary='Kullanıcıyı doğrular ve JWT token döndürür', request=LoginSerializer)
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
@@ -71,13 +71,13 @@ class LoginView(generics.GenericAPIView):
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-@extend_schema(tags=['Users'], summary='List all users for admin users')
+@extend_schema(tags=['Kullanıcılar'], summary='Yönetici için tüm kullanıcıları listeler')
 class AdminUserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
     permission_classes = [IsAdminUser]
 
-@extend_schema(tags=['Users'], summary='Retrieve details of a specific user for admins')
+@extend_schema(tags=['Kullanıcılar'], summary='Yönetici için belirli bir kullanıcının detaylarını getirir')
 class AdminUserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
     'rest_framework',  # Add Django REST framework
     'rest_framework.authtoken',  # Add Django REST framework's token authentication
-    'drf_spectacular',  # Add drf-spectacular for Swagger/OpenAPI schema generation
+    'drf_spectacular',  # Swagger/OpenAPI şeması oluşturma için drf-spectacular
 ]
 
 REST_FRAMEWORK = {
@@ -63,7 +63,7 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'GitHub API',
-    'DESCRIPTION': 'API schema and Swagger documentation for the GitHub API project.',
+    'DESCRIPTION': 'GitHub API projesi için API şeması ve Swagger belgeleri.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
