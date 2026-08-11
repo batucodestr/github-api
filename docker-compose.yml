@@ -1,0 +1,14 @@
+services:
+  web:
+    build: .
+    command: sh -c "python manage.py migrate --noinput && gunicorn --bind 0.0.0.0:8000 githubapi.wsgi:application"
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+      - logs_data:/app/logs
+
+volumes:
+  logs_data:

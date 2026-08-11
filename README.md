@@ -65,7 +65,23 @@ SECRET_KEY=django-secret-key-buraya
 
 ## Docker ile Çalıştırma
 
-Proje, `gunicorn` ile 8000 portunda servis veren bir `Dockerfile` içerir.
+Proje, `gunicorn` ile 8000 portunda servis veren bir `Dockerfile` ve tek komutla ayağa kaldırmak için bir `docker-compose.yml` içerir. `docker-compose.yml`, konteyner başlarken migration'ları otomatik uygular; `db.sqlite3` ve `logs/` kalıcı olacak şekilde bağlanır.
+
+`.env` dosyasının kök dizinde bulunduğundan emin olun (bkz. [Ortam Değişkenleri](#ortam-değişkenleri)), ardından:
+
+```bash
+docker compose up --build
+```
+
+Konteyner ayağa kalktıktan sonra API `http://localhost:8000/api/` altında erişilebilir olur. Superuser oluşturmak için:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+Arka planda çalıştırmak için `docker compose up --build -d`, durdurmak için `docker compose down` kullanabilirsiniz.
+
+Compose olmadan doğrudan Docker ile çalıştırmak isterseniz:
 
 ```bash
 docker build -t github-api .
@@ -75,11 +91,7 @@ docker run -d \
   -p 8000:8000 \
   --env-file .env \
   github-api
-```
 
-Konteyner ayağa kalktıktan sonra API `http://localhost:8000/api/` altında erişilebilir olur. İlk çalıştırmada migration ve superuser oluşturma işlemlerini konteyner içinde çalıştırmanız gerekir:
-
-```bash
 docker exec -it github-api python manage.py migrate
 docker exec -it github-api python manage.py createsuperuser
 ```
