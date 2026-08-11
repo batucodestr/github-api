@@ -7,6 +7,8 @@ Django REST Framework tabanlı, GitHub'a benzer bir kullanıcı / repository / o
 - [Özellikler](#özellikler)
 - [Teknoloji Yığını](#teknoloji-yığını)
 - [Kurulum](#kurulum)
+- [Ortam Değişkenleri](#ortam-değişkenleri)
+- [Docker ile Çalıştırma](#docker-ile-çalıştırma)
 - [API Dokümantasyonu](#api-dokümantasyonu)
 - [Kimlik Doğrulama](#kimlik-doğrulama)
 - [API Uçları](#api-uçları)
@@ -33,6 +35,8 @@ Django REST Framework tabanlı, GitHub'a benzer bir kullanıcı / repository / o
 | Kimlik doğrulama | djangorestframework-simplejwt |
 | API şeması | drf-spectacular (OpenAPI 3) |
 | Veritabanı | SQLite (varsayılan) |
+| WSGI sunucusu | gunicorn |
+| Konteynerleştirme | Docker |
 
 ## Kurulum
 
@@ -42,12 +46,43 @@ source venv/bin/activate      # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 
+# .env dosyasını oluşturun, bkz. "Ortam Değişkenleri"
+
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
 ```
 
 Sunucu ayağa kalktıktan sonra API `http://127.0.0.1:8000/api/` altında hizmet verir.
+
+## Ortam Değişkenleri
+
+Proje kök dizininde bir `.env` dosyası oluşturun (bu dosya `.gitignore` ile repoya dahil edilmez):
+
+```bash
+SECRET_KEY=django-secret-key-buraya
+```
+
+## Docker ile Çalıştırma
+
+Proje, `gunicorn` ile 8000 portunda servis veren bir `Dockerfile` içerir.
+
+```bash
+docker build -t github-api .
+
+docker run -d \
+  --name github-api \
+  -p 8000:8000 \
+  --env-file .env \
+  github-api
+```
+
+Konteyner ayağa kalktıktan sonra API `http://localhost:8000/api/` altında erişilebilir olur. İlk çalıştırmada migration ve superuser oluşturma işlemlerini konteyner içinde çalıştırmanız gerekir:
+
+```bash
+docker exec -it github-api python manage.py migrate
+docker exec -it github-api python manage.py createsuperuser
+```
 
 ## API Dokümantasyonu
 
