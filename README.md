@@ -37,7 +37,8 @@ python manage.py runserver
 | Yöntem | Yol | Açıklama |
 |---|---|---|
 | GET | `/` | Repoları listele |
-| POST | `create/` | Repo oluştur |
+| POST | `create/` | Kişisel repo oluştur (owner = istek atan kullanıcı) |
+| POST | `organizations/<organization_id>/create/` | Organizasyon repo'su oluştur (yalnızca organizasyon üyeleri, owner = null) |
 | GET | `<id>/` | Repo detayı |
 | PUT | `<id>/update/` | Repo güncelle |
 | DELETE | `<id>/delete/` | Repo sil |
@@ -48,3 +49,4 @@ python manage.py runserver
 - Kimlik doğrulama: `rest_framework_simplejwt` (access: 1 saat, refresh: 7 gün)
 - Kullanıcı modeli: e-posta tabanlı özel `CustomUser` (`users.CustomUser`)
 - Veritabanı: varsayılan olarak SQLite (`db.sqlite3`)
+- Repo sahipliği: bir repo ya bir kullanıcıya (`owner`) ya da bir organizasyona (`organization`) ait olabilir, ikisine birden olamaz — bu kural `CheckConstraint` ile veritabanı seviyesinde garanti altına alınmıştır.

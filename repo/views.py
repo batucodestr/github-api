@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics
 from .models import Repo
 from .serializers import RepoSerializer, RepoDetailSerializer
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from organizations.models import Organization
+from organizations.permissions import IsOrganizationMember
 
 # Create your views here.
 
@@ -16,11 +18,17 @@ class RepoCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
-        return Response(
-            {'message': 'Repo created successfully.'},
-            status=status.HTTP_201_CREATED
-        )
-    
+
+class RepoOrganizationCreateView(generics.CreateAPIView):
+    queryset = Repo.objects.all()
+    serializer_class = RepoSerializer
+    permission_classes = [IsAuthenticated, IsOrganizationMember]
+
+    def perform_create(self, serializer):
+        organization = get_object_or_404(Organization, pk=self.kwargs['organization_id'])
+        serializer.save(owner=None, organization=organization)
+
+
 # Repoları herkes görebilir ama sadece sahipleri düzenleyebilir. Bu yüzden list kısmında kontrole gerek yok.
 class RepoListView(generics.ListAPIView):
     serializer_class = RepoSerializer

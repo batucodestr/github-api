@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import (
     RepoCreateView,
+    RepoOrganizationCreateView,
     RepoListView,
     RepoDetailView,
     RepoUpdateView,
@@ -15,6 +16,7 @@ from .views import (
 urlpatterns = [
     path('', RepoListView.as_view(), name='repo_list'),
     path('create/', RepoCreateView.as_view(), name='repo_create'),
+    path('organizations/<int:organization_id>/create/', RepoOrganizationCreateView.as_view(), name='repo_organization_create'),
     path('<int:pk>/', RepoDetailView.as_view(), name='repo_detail'),
     path('<int:pk>/update/', RepoUpdateView.as_view(), name='repo_update'),
     path('<int:pk>/delete/', RepoDeleteView.as_view(), name='repo_delete'),
