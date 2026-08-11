@@ -1,4 +1,5 @@
 from rest_framework import generics
+from drf_spectacular.utils import extend_schema
 from .models import Organization, OrganizationMember
 from .serializers import OrganizationMemberSerializer, OrganizationSerializer, OrganizationDetailSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +10,7 @@ from .permissions import IsOrganizationAdmin,IsOrganizationOwner, IsOrganization
 # Create your views here.
 
 # Organization Views
+@extend_schema(tags=['Organizations'], summary='Create a new organization')
 class OrganizationCreateView(generics.CreateAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
@@ -33,21 +35,25 @@ class OrganizationCreateView(generics.CreateAPIView):
             headers=headers,
         )
 
+@extend_schema(tags=['Organizations'], summary='List all organizations')
 class OrganizationListView(generics.ListAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     permission_classes = [IsAuthenticated]
 
+@extend_schema(tags=['Organizations'], summary='Retrieve details for a specific organization')
 class OrganizationDetailView(generics.RetrieveAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationDetailSerializer
     permission_classes = [IsAuthenticated]
 
+@extend_schema(tags=['Organizations'], summary='Update an organization as an admin')
 class OrganizationUpdateView(generics.UpdateAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     permission_classes = [IsAuthenticated, IsOrganizationAdmin]
 
+@extend_schema(tags=['Organizations'], summary='Delete an organization as the owner')
 class OrganizationDeleteView(generics.DestroyAPIView):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
@@ -55,6 +61,7 @@ class OrganizationDeleteView(generics.DestroyAPIView):
 
 
 # Organization Member Views
+@extend_schema(tags=['Organizations'], summary='Add a member to an organization')
 class OrganizationAddMemberView(generics.CreateAPIView):
     queryset = OrganizationMember.objects.all()
     serializer_class = OrganizationMemberSerializer
@@ -74,6 +81,7 @@ class OrganizationAddMemberView(generics.CreateAPIView):
             headers=headers,
         )
 
+@extend_schema(tags=['Organizations'], summary='Remove a member from an organization')
 class OrganizationRemoveMemberView(generics.DestroyAPIView):
     queryset = OrganizationMember.objects.all()
     serializer_class = OrganizationMemberSerializer
@@ -87,6 +95,7 @@ class OrganizationRemoveMemberView(generics.DestroyAPIView):
             status=status.HTTP_200_OK,
         )
 
+@extend_schema(tags=['Organizations'], summary='List members of an organization')
 class OrganizationMemberListView(generics.ListAPIView):
     serializer_class = OrganizationMemberSerializer
     permission_classes = [IsAuthenticated, IsOrganizationMember]

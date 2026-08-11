@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
+from drf_spectacular.utils import extend_schema
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, UserDetailSerializer, LoginSerializer, SignUpSerializer
 from rest_framework.permissions import IsAuthenticated
@@ -14,15 +15,19 @@ from rest_framework.permissions import IsAdminUser
 
 User = get_user_model()
 
+@extend_schema(tags=['Users'], summary='Obtain JWT access and refresh tokens')
 class CustomTokenObtainPairView(TokenObtainPairView):
     pass
 
+@extend_schema(tags=['Users'], summary='Refresh JWT access token')
 class CustomTokenRefreshView(TokenRefreshView):
     pass
 
+@extend_schema(tags=['Users'], summary='Verify a JWT token')
 class CustomTokenVerifyView(TokenVerifyView):
     pass
 
+@extend_schema(tags=['Users'], summary='Register a new user account')
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
@@ -41,6 +46,7 @@ class SignUpView(generics.CreateAPIView):
 
         return Response(data=response, status=status.HTTP_201_CREATED)
 
+@extend_schema(tags=['Users'], summary='Authenticate a user and return JWT tokens', request=LoginSerializer)
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
@@ -65,11 +71,13 @@ class LoginView(generics.GenericAPIView):
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+@extend_schema(tags=['Users'], summary='List all users for admin users')
 class AdminUserListView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
     permission_classes = [IsAdminUser]
 
+@extend_schema(tags=['Users'], summary='Retrieve details of a specific user for admins')
 class AdminUserDetailView(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
