@@ -15,7 +15,11 @@ from rest_framework.permissions import IsAdminUser
 
 User = get_user_model()
 
-@extend_schema(tags=['Kullanıcılar'], summary='JWT erişim ve yenileme tokenleri alır')
+@extend_schema(
+    tags=['Kullanıcılar'],
+    summary='JWT erişim ve yenileme tokenleri alır',
+    description='E-posta ve şifre ile giriş yaparak `access` (1 saat) ve `refresh` (7 gün) token çifti döndürür.',
+)
 class CustomTokenObtainPairView(TokenObtainPairView):
     pass
 
@@ -27,7 +31,11 @@ class CustomTokenRefreshView(TokenRefreshView):
 class CustomTokenVerifyView(TokenVerifyView):
     pass
 
-@extend_schema(tags=['Kullanıcılar'], summary='Yeni bir kullanıcı kaydı oluşturur')
+@extend_schema(
+    tags=['Kullanıcılar'],
+    summary='Yeni bir kullanıcı kaydı oluşturur',
+    description='Yeni bir kullanıcı hesabı oluşturur ve kullanıcı bilgileriyle birlikte JWT token çifti döndürür.',
+)
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
@@ -46,7 +54,12 @@ class SignUpView(generics.CreateAPIView):
 
         return Response(data=response, status=status.HTTP_201_CREATED)
 
-@extend_schema(tags=['Kullanıcılar'], summary='Kullanıcıyı doğrular ve JWT token döndürür', request=LoginSerializer)
+@extend_schema(
+    tags=['Kullanıcılar'],
+    summary='Kullanıcıyı doğrular ve JWT token döndürür',
+    description='E-posta ve şifre ile kimlik doğrulama yapar, başarılı olursa `access`/`refresh` token döndürür.',
+    request=LoginSerializer,
+)
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
 

@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOGS_DIR = BASE_DIR / 'logs'
@@ -22,10 +26,10 @@ LOGS_DIR.mkdir(parents=True, exist_ok=True)
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$syuj5!eb!ymhkwe#h-9cy7!m%z*-@4qf@jdz(axe$ut@+@8v$'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -63,9 +67,31 @@ SIMPLE_JWT = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'GitHub API',
-    'DESCRIPTION': 'GitHub API projesi için API şeması ve Swagger belgeleri.',
+    'DESCRIPTION': (
+        'GitHub\'a benzer bir kullanıcı, repository ve organizasyon yönetim API\'si.\n\n'
+        'Kimlik doğrulama JWT ile yapılır: `/api/users/token/` uç noktasından alınan '
+        '`access` tokenini `Authorization: Bearer <token>` başlığı ile isteklere ekleyin.'
+    ),
     'VERSION': '1.0.0',
+    'CONTACT': {
+        'name': 'batucodestr',
+    },
+    'LICENSE': {
+        'name': 'MIT',
+    },
+    'TAGS': [
+        {'name': 'Kullanıcılar', 'description': 'Kayıt, giriş, JWT token işlemleri ve admin kullanıcı yönetimi'},
+        {'name': 'Depolar', 'description': 'Repository oluşturma, görüntüleme, güncelleme ve silme işlemleri'},
+        {'name': 'Organizasyonlar', 'description': 'Organizasyon ve üyelik yönetimi'},
+    ],
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,
+        'displayRequestDuration': True,
+        'filter': True,
+    },
+    'SORT_OPERATIONS': False,
+    'SCHEMA_PATH_PREFIX': '/api/',
 }
 
 MIDDLEWARE = [

@@ -96,6 +96,7 @@ class RepoAdminDeleteView(generics.DestroyAPIView):
     serializer_class = RepoDetailSerializer
     permission_classes = [IsAdminUser]
 
+@extend_schema(tags=['Depolar'], summary='Yönetici için yeni bir depo oluşturur')
 class RepoAdminCreateView(generics.CreateAPIView):
     queryset = Repo.objects.all()
     serializer_class = RepoDetailSerializer

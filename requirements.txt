@@ -5,3 +5,4 @@ PyJWT==2.13.0
 pillow==12.2.0
 requests==2.34.2
 drf-spectacular==1.5.0
+python-dotenv==1.2.2
