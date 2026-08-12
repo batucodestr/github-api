@@ -3,7 +3,7 @@ from rest_framework import generics
 from drf_spectacular.utils import extend_schema
 from django.contrib.auth import get_user_model
 from .serializers import UserSerializer, UserDetailSerializer, LoginSerializer, SignUpSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer, TokenVerifySerializer
@@ -11,6 +11,9 @@ from .tokens import get_tokens_for_user
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
+from rest_framework.throttling import ScopedRateThrottle
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 
 User = get_user_model()
@@ -21,7 +24,8 @@ User = get_user_model()
     description='E-posta ve şifre ile giriş yaparak `access` (1 saat) ve `refresh` (7 gün) token çifti döndürür.',
 )
 class CustomTokenObtainPairView(TokenObtainPairView):
-    pass
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
 @extend_schema(tags=['Kullanıcılar'], summary='JWT erişim tokenini yeniler')
 class CustomTokenRefreshView(TokenRefreshView):
@@ -39,6 +43,8 @@ class CustomTokenVerifyView(TokenVerifyView):
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -62,6 +68,8 @@ class SignUpView(generics.CreateAPIView):
 )
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -82,6 +90,17 @@ class LoginView(generics.GenericAPIView):
             return Response(data=response, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+@extend_schema(tags=['Kullanıcılar'], summary='Herkese açık kullanıcı profilini getirir')
+class UserPublicDetailView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserDetailSerializer
+    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(60))
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 @extend_schema(tags=['Kullanıcılar'], summary='Yönetici için tüm kullanıcıları listeler')

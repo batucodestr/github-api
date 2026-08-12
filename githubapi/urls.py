@@ -19,6 +19,8 @@ from django.urls import path
 from django.urls import include
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
+from repo.views import RepositorySearchView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -27,4 +29,5 @@ urlpatterns = [
     path('api/users/', include('users.urls')),  # Include the users app URLs
     path('api/repos/', include('repo.urls')),  # Include the repo app URLs
     path('api/organizations/', include('organizations.urls')),  # Include the organizations app URLs
+    path('api/search/repositories/', RepositorySearchView.as_view(), name='search_repositories'),
 ]

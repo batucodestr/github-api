@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'rest_framework',  # Add Django REST framework
     'rest_framework.authtoken',  # Add Django REST framework's token authentication
+    'django_filters',  # Filtering support for list endpoints
     'drf_spectacular',  # Swagger/OpenAPI şeması oluşturma için drf-spectacular
 ]
 
@@ -58,6 +59,31 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+        'rest_framework.filters.SearchFilter',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'SEARCH_PARAM': 'q',
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour',
+        'auth': '20/hour',
+    },
+    'EXCEPTION_HANDLER': 'githubapi.exceptions.custom_exception_handler',
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'githubapi-cache',
+    }
 }
 
 SIMPLE_JWT = {
@@ -92,6 +118,10 @@ SPECTACULAR_SETTINGS = {
     },
     'SORT_OPERATIONS': False,
     'SCHEMA_PATH_PREFIX': '/api/',
+    'ENUM_NAME_OVERRIDES': {
+        'IssueStatusEnum': 'repo.models.issue_status_choices',
+        'PullRequestStatusEnum': 'repo.models.pull_request_status_choices',
+    },
 }
 
 MIDDLEWARE = [
