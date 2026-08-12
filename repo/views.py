@@ -34,8 +34,7 @@ from .serializers import (
 )
 
 # Görünümler burada oluşturulur.
-
-
+ 
 def _visible_repos_queryset(user, base_queryset=None):
     qs = base_queryset if base_queryset is not None else Repo.objects.all()
     if user and user.is_authenticated:

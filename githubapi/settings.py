@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['github-api-njcc.onrender.com']
+ALLOWED_HOSTS = ['github-api-njcc.onrender.com','127.0.0.1', 'localhost']  # Add your allowed hosts here
 
 
 # Application definition
